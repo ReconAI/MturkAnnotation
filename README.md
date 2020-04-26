@@ -1,7 +1,7 @@
 # MturkAnnotation
 Documentation and Instructions for MTruk with helpful scripts<br><br>
 
-<img src="images/VisioProcess.png" height="400" width="500" title="Process diagram"/><br>
+<img src="images/VisioProcess.png" height="640" width="800" title="Process diagram"/><br>
 
 ## Project structure
 
