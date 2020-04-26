@@ -1,0 +1,177 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<crowd-form answer-format="flatten-objects">
+    <crowd-image-classifier 
+        src="${image_url}"
+        categories="['Correct annotation', 'Annotation doesnt meet requirements']"
+        header="Rate the quality of the annotations based on the background section in the instructions on the left hand side"
+        name="category"
+        overlay="${image_annotation}"
+        >
+        <short-instructions>
+            <h3>PLEASE READ: IMPORTANT NOTES</h3>
+            <b>Make sure you have read this tutorial</b><br>
+            <h3>Task: </h3>
+            In the central part of the interface you would see an image from CCTV camera annotated by a person.<br>
+            The task was to draw bounding boxes around requested vehilces according to the Requirements (see Annotation Requirements section below).
+            <b>Your goal</b> is to inspect the image provided and tell if annotation was done:<br>
+            > <b>Correctly and meet all the Requirements</b> (Press <b>'Correct annotation'</b> button on the right) <br>
+            > <b>Contains errors and doesn't meet ANY the Requirements</b> (Press <b>'Annotation doesn't meet requirements'</b> button on the right) <br>
+            
+            <h3>Annotation Requiremetns: </h3>
+            1. <b>Each and every visible vehicle</b> should be surrounded with a bounding box (<b>including small ones in the distance, please use mouse scroll wheel to zoom-in and -out</b>)<br>
+            <h2><p style="color:green">Good:</p></h2>
+			Press <b>'Correct annotation'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/01_good.png"/><br>
+            <h2><p style="color:red">Bad:</p></h2>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/02_bad.png"/><br><br>
+            2. Bounding box color should represent the vehicle type, please reference the table below:<br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/classesImg.png"/><br>
+			<h2><p style="color:green">Good:</p></h2>
+			Press <b>'Correct annotation'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/06_good.png"/><br>
+            <h2><p style="color:red">Bad:</p></h2>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/03_bad.png"/><br><br>
+            3. Each box should be <b>tight</b> around its object<br>
+			<h2><p style="color:green">Good:</p></h2>
+			Press <b>'Correct annotation'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/06_good.png"/><br>
+            <h2><p style="color:red">Bad:</p></h2>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/04_bad.png"/><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/05_bad.png"/><br><br>
+            4. Bounding boxes should be drawn around visible parts of the objects<br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/07_good.png"/><br><br>
+            5. There might be no objects on the image.<br>
+            In this case make sure that bounding boxes either doesn't present on the image and mark it as <b>'Correct annotation'</b><br>
+            <br>
+            <b>Please make sure that you've read instruction carefully.</b><br>
+            Press 'Full Instruction' button above to see copy of this instruction and the gallery of a Good and Bad annotations.
+        </short-instructions>
+
+        <!-- Use the full-instructions section for more detailed instructions that the 
+              Worker can open while working on the task. Including more detailed 
+              instructions and additional examples of good and bad answers here can
+              help get good results. You can include any HTML here. -->
+        <full-instructions header="Classification Instructions">
+            <h3>PLEASE READ: IMPORTANT NOTES</h3>
+            <b>Make sure you have read this tutorial</b><br>
+            <h3>Task: </h3>
+            In the central part of the interface you would see an image from CCTV camera annotated by a person.<br>
+            The task was to draw bounding boxes around requested vehilces according to the Requirements (see Annotation Requirements section below).
+            <b>Your goal</b> is to inspect the image provided and tell if annotation was done:<br>
+            > <b>Correctly and meet all the Requirements</b> (Press <b>'Correct annotation'</b> button on the right) <br>
+            > <b>Contains errors and doesn't meet ANY the Requirements</b> (Press <b>'Annotation doesn't meet requirements'</b> button on the right) <br>
+            
+            <h3>Annotation Requiremetns: </h3>
+            1. <b>Each and every visible vehicle</b> should be surrounded with a bounding box (<b>including small ones in the distance, please use mouse scroll wheel to zoom-in and -out</b>)<br>
+            <h2><p style="color:green">Good:</p></h2>
+			Press <b>'Correct annotation'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/01_good.png"/><br>
+            <h2><p style="color:red">Bad:</p></h2>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/02_bad.png"/><br><br>
+            2. Bounding box color should represent the vehicle type, please reference the table below:<br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/classesImg.png"/><br>
+			<h2><p style="color:green">Good:</p></h2>
+			Press <b>'Correct annotation'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/06_good.png"/><br>
+            <h2><p style="color:red">Bad:</p></h2>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/03_bad.png"/><br><br>
+            3. Each box should be <b>tight</b> around its object<br>
+			<h2><p style="color:green">Good:</p></h2>
+			Press <b>'Correct annotation'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/06_good.png"/><br>
+            <h2><p style="color:red">Bad:</p></h2>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/04_bad.png"/><br>
+			<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/05_bad.png"/><br><br>
+            4. Bounding boxes should be drawn around visible parts of the objects<br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_validation/07_good.png"/><br><br>
+            5. There might be no objects on the image.<br>
+            In this case make sure that bounding boxes either doesn't present on the image and mark it as <b>'Correct annotation'</b><br>
+            <br>
+            <b>Please make sure that you've read instruction carefully.</b><br>
+            Press 'Full Instruction' button above to see copy of this instruction and the gallery of a Good and Bad annotations.
+            <h3>Examples gallery: </h3>
+            <h2><p style="color:green">Good annotations:</p></h2>
+			<b>1. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_01.png"/><br>
+			<b>2. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_02.png"/><br>
+			<b>3. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_03.png"/><br>
+			<b>4. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_04.png"/><br>
+			<b>5. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_05.png"/><br>
+			<b>6. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_06.png"/><br>
+			<b>7. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_07.png"/><br>
+			<b>8. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_08.png"/><br>
+			<b>9. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_09.png"/><br>
+			<b>10. Good annotation</b><br>
+			Press <b>'Correct annotation'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/good_10.png"/><br>
+            
+            <h2><p style="color:red">Bad annotations:</p></h2>
+			<b>1. Bad annotation:</b><br>
+			A. Bounding box is not tight around the vehicle<br>
+			B. Vehicles in the distance are not annotated<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_01.png"/><br>
+			<b>2. Bad annotation:</b><br>
+			A. Bounding box is not tight around the vehicle<br>
+			B. Vehicles in the distance are not annotated<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_02.png"/><br>
+			<b>3. Bad annotation:</b><br>
+			A. Bounding box is not tight around the vehicle<br>
+			B. Vehicle in the center is not annotated<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_03.png"/><br>
+			<b>4. Bad annotation:</b><br>
+			A. Bounding box is not tight around the vehicle, vehicle classes are incorrect - should be 'cars'/green boundning box<br>
+			B. Vehicles in the distance are not annotated<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_04.png"/><br>
+			<b>5. Bad annotation:</b><br>
+			A. Vehicle in the distance is not annotated<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_05.png"/><br>
+			<b>6. Bad annotation:</b><br>
+			A. Bounding boxes are not tight around the vehicles<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_06.png"/><br>
+			<b>7. Bad annotation:</b><br>
+			A. Partially-visible traile is not annotated<br>
+			B. Bounding box is not tight around the vehicle on the right<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_07.png"/><br>
+			<b>8. Bad annotation:</b><br>
+			A. Bounding box is not tight around the vehicle<br>
+			B. Vehicles in the distance are not annotated<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_08.png"/><br>
+			<b>9. Bad annotation:</b><br>
+			A. Vehicles in the distance are not annotated<br>
+			Press <b>'Annotation doesn't meet requirements'</b><br>
+            <img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/gallery_validation/bad_09.png"/><br>
+        </full-instructions>
+    </crowd-image-classifier>
+</crowd-form>
