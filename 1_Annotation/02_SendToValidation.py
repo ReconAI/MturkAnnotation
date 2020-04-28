@@ -7,7 +7,7 @@ Created on Sun Apr 26 18:08:26 2020
 
 import pandas as pd
 
-df = pd.read_csv('AMTAssignment/Batch_3998716_batch_results.csv') #
+df = pd.read_csv('results/Batch_3998716_batch_results.csv') #
 
 sub_df = df[['Input.image_url','Answer.annotatedResult.boundingBoxes']]
 
@@ -33,4 +33,4 @@ overlay_end = "},}"
 sub_df['image_annotation'] = overlay_begin + sub_df['image_annotation'].replace('"',"'") + overlay_end
 
 
-sub_df.to_csv('AMTAssignment/to_Validation.csv',index=False)
+sub_df.to_csv('results/to_Validation.csv',index=False)
