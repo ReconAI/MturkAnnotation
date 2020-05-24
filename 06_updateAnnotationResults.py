@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr 19 13:29:56 2020
-
-@author: kompich
+Input - Validation_Review_Thread#.csv and Mturk tier 1 results file
+Process Mturk tier 1 results file based on Validation_Review_Thread#.csv to Mturk results review format
+Output - modified Mturk tier 1 results file in Results Validation format
 """
 
 THREAD_NUMBER = 3
@@ -26,4 +26,3 @@ joined_df.drop(['annotation','Category','Decision'], axis=1, inplace=True)
 
 filename = 'results/AnnotationResultsValidated_Thread' + str(THREAD_NUMBER) + '.csv'
 joined_df.to_csv(filename)
-

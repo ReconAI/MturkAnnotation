@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr 19 13:29:56 2020
-
-@author: kompich
+Input - Mturk tier 2 results file
+Process Mturk tier 2 results file into a summary file
+Output - results/Validation_Review_Thread#.csv
 """
 
 #"Input.image_url_0","Input.image_annotation_0","Input.image_url_1","Input.image_annotation_1","Input.image_url_2","Input.image_annotation_2"

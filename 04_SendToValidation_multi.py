@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr 26 18:08:26 2020
-
-@author: kompich
+Input - Mturk tier 1 results file
+Process Mturk tier 1 results into input format for Mturk tier 2
+Output - results/Validation_Thread#.csv'
 """
 
 NUM_SAMPLES_IN_TASK = 10

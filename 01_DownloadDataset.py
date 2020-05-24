@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Download list of all images from S3 and save them in csv
+Input - S3 bucket name and folder
+Download list of all images from S3 and save them in a csv file
+Output - results/S3Dataset.csv
 """
 
 import boto3

@@ -6,7 +6,6 @@ Input - Dataset.csv
 3. Update threadNum for selected records in Dataset.csv
 4. Make images public
 5. Put thread_df in separate file (Annotation_Thread#.csv) with annotation and accepted columns filled with default values
-
 Output - Annotation_Thread#.csv and updated Dataset.csv
 """
 
@@ -18,7 +17,6 @@ THREAD_NUMBER = 3
 THREAD_SIZE = 10
 
 df = pd.read_csv('results/Dataset.csv')
-
 
 filt_emptyThreadNum = df['threadNum'].isnull()
 
