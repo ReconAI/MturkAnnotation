@@ -13,8 +13,11 @@ import pandas as pd
 import boto3
 from credentials import *
 
-THREAD_NUMBER = 3
-THREAD_SIZE = 10
+IMAGE_LINK_HEADER = 'https://reconai-traffic.s3.eu-central-1.amazonaws.com/'
+
+
+THREAD_NUMBER = 1
+THREAD_SIZE = 100
 
 df = pd.read_csv('results/Dataset.csv')
 
@@ -29,10 +32,6 @@ thread_df['annotation'] = ''
 thread_df['accepted'] = False
 
 df.to_csv('results/Dataset.csv',index=False)
-
-threadFilename = 'results/Annotation_Thread' + str(THREAD_NUMBER)+ '.csv'
-thread_df.to_csv(threadFilename,index=False)
-print('Thread file saved')
 
 ####Connect to AWS and make images public
 ###############
@@ -54,7 +53,12 @@ for img_path in thread_df['image_url'].tolist():
         response = object_acl.put(ACL='public-read')
         
 print('Images made public')
-        
-        
-        
-        
+
+#####Modify data frame and save
+#################
+
+thread_df['image_url'] = IMAGE_LINK_HEADER +  thread_df['image_url']
+
+threadFilename = 'results/Annotation_Thread' + str(THREAD_NUMBER)+ '.csv'
+thread_df.to_csv(threadFilename,index=False)
+print('Thread file saved')
