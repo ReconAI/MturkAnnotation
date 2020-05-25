@@ -21,7 +21,7 @@ THREAD_SIZE = 100
 
 df = pd.read_csv('results/Dataset.csv')
 
-filt_emptyThreadNum = df['threadNum'].isnull()
+filt_emptyThreadNum = (df['threadNum'].isnull()) & (df['isAnnotated'] == False)
 
 thread_df = df.loc[filt_emptyThreadNum, ['image_url','threadNum']].head(THREAD_SIZE)
 thread_df['threadNum'] = THREAD_NUMBER
@@ -58,7 +58,7 @@ print('Images made public')
 #################
 
 thread_df['image_url'] = IMAGE_LINK_HEADER +  thread_df['image_url']
-
+        
 threadFilename = 'results/Annotation_Thread' + str(THREAD_NUMBER)+ '.csv'
 thread_df.to_csv(threadFilename,index=False)
 print('Thread file saved')
