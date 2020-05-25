@@ -19,9 +19,10 @@ Documentation and Instructions for MTruk with helpful scripts<br><br>
 11. Run 05_summarizeMturkValidationFile_multi.py, specify number of images per task (10), get Validation_Review_Thread#.csv
 12. Run 06_updateAnnotationResults.py, input is annotation results file (step 6), it will mark assignmens as Approved/Rejected and save as AnnotationResultsValidated_Thread#.csv
 13. Run 07_postValidationThreadUpdate.py, specify thread number. it will merge data from Annotation_Thread#.csv from Validation_Review_Thread#.csv into Annotation_Thread#_updated.csv and make images private
-14. (MTurk) Upload AnnotationResultsValidated_Thread#.csv to Annotation task results review
+14. (MTurk) Upload AnnotationResultsValidated_Thread#.csv to Annotation task results review (Disable [] Republish rejected assignment(s) for other Workers to complete)
 15. (MTurk) Close annotation task
 16. Run 08_mergeDatabaseResults.csv, specify Annotation_Thread#_updated.csv, it will update records in 04_MergeDatabaseResults (put annotation data and isAnnotated, remove threadNumber)
+17. Remove %Thread#% files
 
 ## File samples
 

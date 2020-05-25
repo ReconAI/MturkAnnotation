@@ -5,7 +5,7 @@ Update Dataset.csv based on Annotation_Thread#.csv data
 Output - Dataset.csv
 """
 
-THREAD_NUMBER = 3
+THREAD_NUMBER = 1
 
 import pandas as pd
 import numpy as np
@@ -30,6 +30,3 @@ joined_thread_df.drop(['new_annotation','accepted'], axis=1, inplace=True)
 joined_thread_df.to_csv('results/Dataset.csv',index=False)
 
 print('Thread file updated and saved')
-
-
-

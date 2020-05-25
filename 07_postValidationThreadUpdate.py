@@ -5,7 +5,7 @@ Update Annotation_Thread#.csv based on Validation_Review_Thread#.csv data, make 
 Output - Annotation_Thread#_updated.csv
 """
 
-THREAD_NUMBER = 4
+THREAD_NUMBER = 1
 IMAGE_LINK_HEADER = 'https://reconai-traffic.s3.eu-central-1.amazonaws.com/'
 
 import pandas as pd
@@ -17,7 +17,7 @@ from credentials import *
 #https://reconai-traffic.s3.eu-central-1.amazonaws.com/images/C0153100_r0_w0_2020-02-21_15-30-50.jpg,"{...}",4,Correct
 valid_df_filename = 'results/Validation_Review_Thread' + str(THREAD_NUMBER) + '.csv'
 valid_df = pd.read_csv(valid_df_filename)
-valid_df['image_url'] = valid_df['image_url'].str.replace(IMAGE_LINK_HEADER,'')
+
 valid_df.rename(columns={'annotation':'new_annotation'},inplace=True)
 
 filt_correctAnnotations = valid_df['Decision'] == 'Correct'
@@ -33,6 +33,8 @@ joined_thread_df = thread_df.merge(valid_df_correctAnnotations, on='image_url', 
 joined_thread_df['annotation'] = joined_thread_df.apply(lambda x: x.new_annotation if (~pd.isnull(x.new_annotation)) else x.annotation, axis=1)
 joined_thread_df['accepted'] = joined_thread_df.apply(lambda x: False if (pd.isnull(x.new_annotation) or x.new_annotation == '') else True, axis=1)
 joined_thread_df.drop(['new_annotation'], axis=1, inplace=True)
+
+joined_thread_df['image_url'] = joined_thread_df['image_url'].str.replace(IMAGE_LINK_HEADER,'')
 
 updated_thread_df_filename = 'results/Annotation_Thread' + str(THREAD_NUMBER) + '_updated.csv'
 joined_thread_df.to_csv(updated_thread_df_filename,index=False)
@@ -51,7 +53,7 @@ session = boto3.Session(
 s3 = session.resource('s3')
 bucket = s3.Bucket(AWS_BUCKET_NAME)
 
-for img_path in thread_df['image_url'].tolist():
+for img_path in joined_thread_df['image_url']:
     for s3_file in bucket.objects.filter(Prefix=img_path):
         key = s3_file.key
         
@@ -59,4 +61,4 @@ for img_path in thread_df['image_url'].tolist():
         object_acl = s3.ObjectAcl(AWS_BUCKET_NAME,key)
         response = object_acl.put(ACL='private')
         
-print('Images made public')
+print('Images made private')
