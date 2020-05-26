@@ -15,40 +15,20 @@ from tqdm import tqdm
 SAVE_FOLDER = 'AnnotationResults'
 NUM_ANNOTATION_IMAGES = 5
 NUM_VALIDATION_IMAGES = 10
-THREAD_NUMBER = 1
+THREAD_NUMBER = 3
 
 #Load annotation result
-annotOut_df = pd.read_csv(os.path.join(SAVE_FOLDER,'Batch_3998716_batch_results.csv'))
+
+AnnotationOutFilename = '03_Thread{0}_AnnotationOutput.csv'.format(THREAD_NUMBER)
+annotOut_df = pd.read_csv(os.path.join(SAVE_FOLDER,AnnotationOutFilename))
 
 ## Prepare one-column dataframe ( [url_0, annot_0,url_1, annot_1] => [url, annot]   )
 df_list = []
 for i in range(NUM_ANNOTATION_IMAGES):
     col_img_url_name = 'Input.image_url_'+str(i)
-    
-    ## THIS NAMES HAS TO BE VERIFIED!
-    #Consider Answer.annotatedResult.boundingBoxes_0
-    col_annot_name_1 = 'Answer.annotatedResult_'+str(i) 
-    col_annot_name_2 = col_annot_name_1+'.label'
-    
-    if col_annot_name_1 not in annotOut_df.columns:
-        annotOut_df[col_annot_name_1] = ''
-    if col_annot_name_2 not in annotOut_df.columns:
-        annotOut_df[col_annot_name_2] = ''
-    
-    sub_df = annotOut_df[[col_img_url_name,col_annot_name_1,col_annot_name_2]]
-    
-    ## here we merge 'Answer.annotatedResult_X' and 'Answer.annotatedResult_X.label' into 'Answer.annotatedResult_X'
-    def merge_nans(x,y):
-        if pd.isnull(x):
-            x = ''
-        if pd.isnull(y):
-            y = ''
-        return x + y
-    sub_df[col_annot_name_1] = sub_df.apply(lambda x: merge_nans(x[col_annot_name_1], x[col_annot_name_2]),axis=1)
-    
-    sub_df.rename(columns={col_img_url_name:'image_url',col_annot_name_1:'image_annotation'},inplace=True)
-    sub_df.drop([col_annot_name_2], axis=1,inplace=True)
-    
+    col_annot_name = 'Answer.annotatedResult_{0}.boundingBoxes'.format(i)
+    sub_df = annotOut_df[[col_img_url_name,col_annot_name]]
+    sub_df.rename(columns={col_img_url_name:'image_url',col_annot_name:'image_annotation'},inplace=True)
     df_list.append(sub_df)
 
 ## Single column [image_url, image_annotation] dataset
