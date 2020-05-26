@@ -36,6 +36,10 @@ Documentation and Instructions for MTruk with helpful scripts<br><br>
 10. 08_Thread#_ValidationOutput_Summary.csv - Summary of Mturk Tier 2 output (1 column)
 11. 09_Thread#_AnnotaionRankInput.csv - Mturk Tier 1 Annotation Rank input
 
+## Common Issues
+
+1. Sometimes tasks get frozen, this usually happens when images are failing to load, for example when there are 'bad' images from not-working cameras. In this cases you have to monitor such task or some of annotators might sent you an email about the issue.
+
 # Data Preparation
 This part of repository provides instructions and scripts on 'how-to':<br>
 1. Save data in AWS S3

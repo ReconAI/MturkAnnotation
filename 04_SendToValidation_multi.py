@@ -15,7 +15,7 @@ from tqdm import tqdm
 SAVE_FOLDER = 'AnnotationResults'
 NUM_ANNOTATION_IMAGES = 5
 NUM_VALIDATION_IMAGES = 10
-THREAD_NUMBER = 3
+THREAD_NUMBER = 2
 
 #Load annotation result
 
