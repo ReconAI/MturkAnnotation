@@ -79,3 +79,9 @@ As mentioned in item #2, [CamerasAnnotation.csv](https://github.com/ReconAI/Mtur
 ## ToDo
 
 1. FOLDER PER EACH THREAD 
+2. Visualization tool - save random N images with annotation (publish -> unpublish)
+3. Add execution time per each script
+4. Boto3 - fast image publising/privating
+5. Better comments to navigate over scripts or modular/functional structure
+
+
