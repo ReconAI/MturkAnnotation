@@ -7,34 +7,34 @@ Documentation and Instructions for MTruk with helpful scripts<br><br>
 
 0. See Data Preparation
 1. Run 01_DownloadDataset.py. It will create S3Dataset.csv - a raw list of all image urls
-2. Run 02_AlterDataset.py. It will create Dataset.csv - file which would be used as a final data storage (img_urls, annotations, remarks isAnnotated, threadNumbers)
-3. Run 03_SelectThread.py this will create Annotation_Thread#.csv where annotation results for particular thread will be stored, also script will make images related to the Thread #X public. Don't forget to change thread #!
-4. (MTurk) Create MTurk detection project with 1 image per task
-5. (MTurk) Upload Annotation_Thread#.csv in Mturk, launch annotation task
-6. (MTurk) Download Thread annotation result file (format: Batch_3998716_batch_results.csv)
-7. Run 04_SendToValidation_multi.py, specify number of images per task (10), get 'Validation_Thread#.csv'
+2. Run 02_AlterDataset.py. It will create Dataset.csv - file which would be used as a final data storage (img_urls, annotations, remarks isAnnotated, threadNumbers). Enable REMOVE_BAD_IMAGES to delete images from sightseeing cameras and close-road-view cameras
+3. Run 03_SendToAnnotation_multi.py it will create 01_Thread#_Batch.csv (list of all batch images to be annotated) and 02_Thread#_AnnotationInput.csv (file which has to be uploaded to Mturk Annotation Multi project). Also script will make images related to the Thread #X public. Don't forget to change thread #!
+4. (MTurk) Create MTurk detection project with 5 images per task (see MTurkProjects/04_BoundingBoxes_DTF_Multi5)
+5. (MTurk) Upload 02_Thread#_AnnotationInput.csv in Mturk, launch annotation task
+6. (MTurk) Download Thread annotation result file (format: Batch_3998716_batch_results.csv). Rename to 03_Thread#_AnnotationOutput.csv
+7. Run 04_SendToValidation_multi.py, specify number of annotation images (5) and number of validation images (10) per task, get 04_Thread#_AnnotaionOutput_SingleCol.csv (list of all annoations in a single column) and 05_Thread#_ValidationInput.csv (input file for a validation task)
 8. (MTurk) Create MTurk Tier 2 project with (NUMBER!) images per task
-9. (MTurk) Upload Validation_Thread#.csv in Mturk, launch validation task
-10. (MTurk) Download Thread validation result file (format: Batch_3998716_batch_results.csv)
-11. Run 05_summarizeMturkValidationFile_multi.py, specify number of images per task (10), get Validation_Review_Thread#.csv
-12. Run 06_updateAnnotationResults.py, input is annotation results file (step 6), it will mark assignmens as Approved/Rejected and save as AnnotationResultsValidated_Thread#.csv
-13. Run 07_postValidationThreadUpdate.py, specify thread number. it will merge data from Annotation_Thread#.csv from Validation_Review_Thread#.csv into Annotation_Thread#_updated.csv and make images private
-14. (MTurk) Upload AnnotationResultsValidated_Thread#.csv to Annotation task results review (Disable [] Republish rejected assignment(s) for other Workers to complete)
-15. (MTurk) Close annotation task
-16. Run 08_mergeDatabaseResults.csv, specify Annotation_Thread#_updated.csv, it will update records in 04_MergeDatabaseResults (put annotation data and isAnnotated, remove threadNumber)
-17. Remove %Thread#% files
+9. (MTurk) Upload 05_Thread#_ValidationInput.csv in Mturk, launch validation task
+10. (MTurk) Download Thread validation result file (format: Batch_3998716_batch_results.csv). Rename to 06_Thread#_ValidationOutput.csv
+11. Run 05_RankAnnotation_multi.py, specify number of images per annotation (5) and validation (10) tasks, get 07_Thread#_ValidationOutput_SingleColumn.csv (Output file in one column [url, annot, category]), 08_Thread#_ValidationOutput_Summary.csv (summary on each annotation, grouped by Score), 09_Thread#_AnnotaionRankInput.csv (Ranking file for Mturk annotation task)
+12. (MTurk) Upload 09_Thread#_AnnotaionRankInput.csv to Annotation task results review (Disable [] Republish rejected assignment(s) for other Workers to complete)
+13. (MTurk) Close annotation task
+14. Run 06_UpdateDatabase.py, input is 08_Thread#_ValidationOutput_Summary.csv and Database.csv, script will update Database.csv with correct annotations, erase threadNumber, set isAnnotated and make public images private
+17. Save Thread# Annotation and Validation output files as well as 08_Thread#_ValidationOutput_Summary, remove the rest %Thread#% files
 
 ## File samples
 
 1. S3Dataset.csv - list of links to images from S3 Bucket
 2. Dataset.csv - S3 image links with annotation, threadNumber and isAnnotated columns
-3. Annotation_Thread#.csv - 1000 images from Dataset.csv, MTurk Tier 1 input
-4. Batch_3998716_batch_results.csv - MTurk Tier 1 output
-5. Validation_Thread#.csv - MTurk Tier 2 input
-6. Batch_4050706_batch_results.csv - MTurk Tier 2 output
-7. Validation_Review_Thread#.csv - Summary of MTurk Tier 2 results
-8. AnnotationResultsValidated_Thread#.csv - Approval/Validation csv for MTurk Tier 1 task
-9. Annotation_Thread#_updated.csv - Annotation_Thread with annotations filled up
+3. 01_Thread#_Batch.csv - N images from Dataset.csv
+4. 02_Thread#_AnnotationInput.csv - 01_Thread#_Batch.csv in Mturk Tier 1 input format (N columns)
+5. 03_Thread#_AnnotationOutput.csv - Mturk Tier 1 output (N columns)
+6. 04_Thread#_AnnotaionOutput_SingleCol.csv - Mturk Tier 1 output (1 column)
+7. 05_Thread#_ValidationInput.csv - Mturk Tier 2 input (M columns)
+8. 06_Thread#_ValidationOutput.csv - Mturk Tier 2 output (M columns)
+9. 07_Thread#_ValidationOutput_SingleColumn.csv - Mturk Tier 2 output (1 column)
+10. 08_Thread#_ValidationOutput_Summary.csv - Summary of Mturk Tier 2 output (1 column)
+11. 09_Thread#_AnnotaionRankInput.csv - Mturk Tier 1 Annotation Rank input
 
 # Data Preparation
 This part of repository provides instructions and scripts on 'how-to':<br>

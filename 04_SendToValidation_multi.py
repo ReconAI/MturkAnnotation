@@ -1,101 +1,98 @@
 # -*- coding: utf-8 -*-
 """
-Input - Mturk tier 1 results file
+Input - Mturk tier 1 results file  (Batch_3998716_batch_results.csv / 03_Thread#_AnnotationOutput.csv)
 Process Mturk tier 1 results into input format for Mturk tier 2
-Output - results/Validation_Thread#.csv'
+Output - 04_Thread#_AnnotaionOutput_SingleCol.csv and 05_Thread#_ValidationInput.csv
 """
 
-NUM_SAMPLES_IN_TASK = 10
-THREAD_NUMBER = 3
-
+#libs import
 import pandas as pd
 import numpy as np
+import os
+from tqdm import tqdm
 
-df = pd.read_csv('results/Batch_3998716_batch_results.csv') #
+#constants declaration
+SAVE_FOLDER = 'AnnotationResults'
+NUM_ANNOTATION_IMAGES = 5
+NUM_VALIDATION_IMAGES = 10
+THREAD_NUMBER = 1
 
-sub_df = df[['Input.image_url','Answer.annotatedResult.boundingBoxes']]
+#Load annotation result
+annotOut_df = pd.read_csv(os.path.join(SAVE_FOLDER,'Batch_3998716_batch_results.csv'))
 
-sub_df.rename(columns={'Input.image_url':'image_url','Answer.annotatedResult.boundingBoxes':'image_annotation'},inplace=True)
+## Prepare one-column dataframe ( [url_0, annot_0,url_1, annot_1] => [url, annot]   )
+df_list = []
+for i in range(NUM_ANNOTATION_IMAGES):
+    col_img_url_name = 'Input.image_url_'+str(i)
+    
+    ## THIS NAMES HAS TO BE VERIFIED!
+    col_annot_name_1 = 'Answer.annotatedResult_'+str(i)
+    col_annot_name_2 = col_annot_name_1+'.label'
+    
+    if col_annot_name_1 not in annotOut_df.columns:
+        annotOut_df[col_annot_name_1] = ''
+    if col_annot_name_2 not in annotOut_df.columns:
+        annotOut_df[col_annot_name_2] = ''
+    
+    sub_df = annotOut_df[[col_img_url_name,col_annot_name_1,col_annot_name_2]]
+    
+    ## here we merge 'Answer.annotatedResult_X' and 'Answer.annotatedResult_X.label' into 'Answer.annotatedResult_X'
+    def merge_nans(x,y):
+        if pd.isnull(x):
+            x = ''
+        if pd.isnull(y):
+            y = ''
+        return x + y
+    sub_df[col_annot_name_1] = sub_df.apply(lambda x: merge_nans(x[col_annot_name_1], x[col_annot_name_2]),axis=1)
+    
+    sub_df.rename(columns={col_img_url_name:'image_url',col_annot_name_1:'image_annotation'},inplace=True)
+    sub_df.drop([col_annot_name_2], axis=1,inplace=True)
+    
+    df_list.append(sub_df)
 
-print(sub_df.dtypes)
+## Single column [image_url, image_annotation] dataset
+annotOut_df = pd.concat(df_list)
 
-print(sub_df['image_annotation'].head())
+AnnotationOutSingleFilename = '04_Thread{0}_AnnotaionOutput_SingleCol.csv'.format(THREAD_NUMBER)
+annotOut_df.to_csv(os.path.join(SAVE_FOLDER,AnnotationOutSingleFilename),index=False)
 
-sub_df['image_annotation'] = sub_df['image_annotation'].str.replace('"height"', 'height')
-sub_df['image_annotation'] = sub_df['image_annotation'].str.replace('"label"', 'label')
-sub_df['image_annotation'] = sub_df['image_annotation'].str.replace('"left"', 'left')
-sub_df['image_annotation'] = sub_df['image_annotation'].str.replace('"top"', 'top')
-sub_df['image_annotation'] = sub_df['image_annotation'].str.replace('"width"', 'width')
-
-sub_df['image_annotation'] = sub_df['image_annotation'].str.replace('"', "'")
-print(sub_df['image_annotation'].head())
+#sub_df -> annotOut_df
 
 overlay_begin = "{'boundingBox': {labels: ['Car', 'Van', 'Truck', 'Trailer', 'Bus', 'Motorbike', 'Bicycle', 'Heavy Equipment', 'Car Trailer', 'Tractor', 'Pedestrian'], value: "
 overlay_end = "},}"
+## ToDo: Find a way to make it prettier
+annotOut_df['image_annotation'] = annotOut_df['image_annotation'].str.replace('"height"', 'height')
+annotOut_df['image_annotation'] = annotOut_df['image_annotation'].str.replace('"label"', 'label')
+annotOut_df['image_annotation'] = annotOut_df['image_annotation'].str.replace('"left"', 'left')
+annotOut_df['image_annotation'] = annotOut_df['image_annotation'].str.replace('"top"', 'top')
+annotOut_df['image_annotation'] = annotOut_df['image_annotation'].str.replace('"width"', 'width')
+annotOut_df['image_annotation'] = annotOut_df['image_annotation'].str.replace('"', "'")
+annotOut_df['image_annotation'] = overlay_begin + annotOut_df['image_annotation'].replace('"',"'") + overlay_end
 
-sub_df['image_annotation'] = overlay_begin + sub_df['image_annotation'].replace('"',"'") + overlay_end
-
-# here we have a good single-line dataset
-ROW_COUNT = len(df.index)
+## Add extra columns in the end of dataset if needed
+## Thread df and annotOut_df!!! Uncomment below if fails
+## ROW_COUNT = len(df.index)
+ROW_COUNT = len(annotOut_df.index)
 ROWS_TO_ADD = 0
 
-while ((ROW_COUNT+ROWS_TO_ADD) % NUM_SAMPLES_IN_TASK != 0):
+while ((ROW_COUNT+ROWS_TO_ADD) % NUM_VALIDATION_IMAGES != 0):
     ROWS_TO_ADD = ROWS_TO_ADD + 1
 
-sub_df_footer = sub_df.head(ROWS_TO_ADD)
-sub_df = sub_df.append(sub_df_footer)
+annotOut_df = annotOut_df.append(annotOut_df.head(ROWS_TO_ADD))
 
-## Split dataset by NUM_SAMPLES_IN_TASK columns
-dataframes = np.array_split(sub_df, NUM_SAMPLES_IN_TASK)
+## Split dataset by NUM_VALIDATION_IMAGES columns
+dataframes = np.array_split(annotOut_df, NUM_VALIDATION_IMAGES)
 new_dataframes = []
 
 for idx, mini_df in enumerate(dataframes):
-    print(len(mini_df))
-    
     url_name = 'image_url_' + str(idx)
     annot_name = 'image_annotation_' + str(idx)
     mini_df.rename(columns={'image_url':url_name,'image_annotation':annot_name},inplace=True)
     mini_df.reset_index(inplace=True)
     new_dataframes.append(mini_df)
     
-    
-new_sub_df = pd.concat(new_dataframes, axis=1, sort=False)
+validInput_df = pd.concat(new_dataframes, axis=1, sort=False)
+validInput_df.drop(['index'],axis=1,inplace=True)
 
-new_sub_df.drop(['index'],axis=1,inplace=True)
-
-save_filename = 'results/Validation_Thread' + str(THREAD_NUMBER) + '.csv'
-
-new_sub_df.to_csv(save_filename,index=False)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ValidationInpFilename = '05_Thread{0}_ValidationInput.csv'.format(THREAD_NUMBER)
+validInput_df.to_csv(os.path.join(SAVE_FOLDER,ValidationInpFilename),index=False)
