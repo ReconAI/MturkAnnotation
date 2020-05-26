@@ -26,7 +26,8 @@ for i in range(NUM_ANNOTATION_IMAGES):
     col_img_url_name = 'Input.image_url_'+str(i)
     
     ## THIS NAMES HAS TO BE VERIFIED!
-    col_annot_name_1 = 'Answer.annotatedResult_'+str(i)
+    #Consider Answer.annotatedResult.boundingBoxes_0
+    col_annot_name_1 = 'Answer.annotatedResult_'+str(i) 
     col_annot_name_2 = col_annot_name_1+'.label'
     
     if col_annot_name_1 not in annotOut_df.columns:

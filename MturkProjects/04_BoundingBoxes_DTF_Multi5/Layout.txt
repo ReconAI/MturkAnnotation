@@ -29,9 +29,11 @@
             <b>2. This is the real task:</b> There are constant queality checkups, and if you fail at any point you will not get paid and <b>your qualification will be revoked.</b><br>
             <h3>Task: </h3>
             You are provided with 5 images from CCTV camera. Draw bounding boxes around requested vehilces according to the Annotation Requirements.<br>
+            All images with annotation tools are provided on <b>this page</b>, please use the scroll.<br>
+            <b>To finalize the task</b> please ensure that <b>each image</b> has an annotation then press any of the 'Submit' buttons.<br>
             Full instruction is provided at the left side of first image and <b>it's applicable for all the images in the task.</b><br>
             <h3>Annotation Requiremetns: </h3>
-            Please note that failure to comply with any of these items might result in <b>Rejected task</b><br><br>
+            Please note that failure to comply with any of these items in any of images might result in <b>Rejected task</b><br><br>
             1. <b>Each and every visible vehicle</b> should be surrounded with a bounding box (<b>including small ones in the distance, please use mouse scroll wheel to zoom-in and -out</b>)<br>
             <h2><p style="color:green">Good:</p></h2>
     		<img width="100%" src="https://reconai-traffic.s3.eu-central-1.amazonaws.com/MturkTutorialImages/instruction_boxes/01_good.png"/><br>

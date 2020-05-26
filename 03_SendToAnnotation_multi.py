@@ -14,12 +14,13 @@ from credentials import *
 import pandas as pd
 import boto3
 import os
+import numpy as np
 from tqdm import tqdm
 
 #constants declaration
 SAVE_FOLDER = 'AnnotationResults'
 IMAGE_LINK_HEADER = 'https://reconai-traffic.s3.eu-central-1.amazonaws.com/'
-THREAD_NUMBER = 1
+THREAD_NUMBER = 3
 THREAD_SIZE = 100
 NUM_IMAGES_PER_ANNOTATION_TASK = 5
 
@@ -51,7 +52,7 @@ for img_path in tqdm(thread_df['image_url'].tolist()):
         #Grant read access to files
         object_acl = s3.ObjectAcl(AWS_BUCKET_NAME,key)
         response = object_acl.put(ACL='public-read')
-        
+
 print('Images made public')
 
 #Thread file handling
@@ -64,13 +65,13 @@ ThreadBatchFilename = '01_Thread{0}_Batch.csv'.format(THREAD_NUMBER)
 thread_df.to_csv(os.path.join(SAVE_FOLDER,ThreadBatchFilename),index=False)
 
 ## Remove unused columns
-thread_df.drop(['annotation','accepted'], axis=1, inplace=True)
+thread_df.drop(['annotation','accepted','threadNum'], axis=1, inplace=True)
 
 ## Add extra lines to single-thread dataset
 ROW_COUNT = len(thread_df.index)
 ROWS_TO_ADD = 0
 
-while ((ROW_COUNT+ROWS_TO_ADD) % NUM_SAMPLES_IN_TASK != 0):
+while ((ROW_COUNT+ROWS_TO_ADD) % NUM_IMAGES_PER_ANNOTATION_TASK != 0):
     ROWS_TO_ADD = ROWS_TO_ADD + 1
 
 thread_df = thread_df.append(thread_df.head(ROWS_TO_ADD))
