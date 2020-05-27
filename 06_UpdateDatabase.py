@@ -11,11 +11,12 @@ import pandas as pd
 import boto3
 import numpy as np
 from tqdm import tqdm
+import os
 
 #constants declaration
 IMAGE_LINK_HEADER = 'https://reconai-traffic.s3.eu-central-1.amazonaws.com/'
 SAVE_FOLDER = 'AnnotationResults'
-THREAD_NUMBER = 1
+THREAD_NUMBER = 2
 
 #Load Dataset.csv
 #image_url,annotation,threadNum,isAnnotated
@@ -33,6 +34,7 @@ valid_df.rename(columns={'annotation':'new_annotation'},inplace=True)
 valid_df['image_url'] = valid_df['image_url'].str.replace(IMAGE_LINK_HEADER,'')
 valid_df['accepted'] = valid_df['Decision'] == 'Correct'
 #Connect to AWS and make images private
+
 session = boto3.Session(
     aws_access_key_id=AWS_ACCESS_KEY_ID,
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY
@@ -56,6 +58,6 @@ updated_df = df.merge(valid_df, on='image_url', how='left')
 updated_df['isAnnotated'] = updated_df.apply(lambda x: x.accepted if x.accepted==True else x.isAnnotated, axis=1)
 updated_df['threadNum'] = updated_df.apply(lambda x: '' if (x.accepted==True or x.accepted==False) else x.threadNum, axis=1)
 updated_df['annotation'] = updated_df.apply(lambda x: x.new_annotation if x.accepted==True else x.annotation, axis=1)
-updated_df.drop(['new_annotation','accepted'], axis=1, inplace=True)
-updated_df.to_csv('results/Dataset.csv',index=False)
+updated_df.drop(['new_annotation','accepted','Category','Decision'], axis=1, inplace=True)
+updated_df.to_csv(os.path.join(SAVE_FOLDER,'Dataset.csv'),index=False)
 print('Thread file updated and saved')
