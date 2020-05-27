@@ -38,7 +38,8 @@ Documentation and Instructions for MTruk with helpful scripts<br><br>
 
 ## Common Issues
 
-1. Sometimes tasks get frozen, this usually happens when images are failing to load, for example when there are 'bad' images from not-working cameras. In this cases you have to monitor such task or some of annotators might sent you an email about the issue.
+1. Sometimes tasks get frozen, this usually happens when images are failing to load, for example when there are 'bad' images from not-working cameras. In this cases you have to monitor such task or some of annotators might sent you an email about the issue. + usually 'bad' images from non-functional API would return too small images (~2 Kb), boto3 allows to check image size.
+2. It has to be taken in consideration that Tier 2 validation is not always gives correct results. For now there are few options to increase correct validation rate: 1. Hire workers with high qualification; 2. Add more options in task quiz (A. Correct annotation; B. Incorrect vehicle class; C. Not all vehicles marked; D. Incorrect bounding boxes; E. B, C and D). In addition an algoithm can be implemented to make decisions only if there are answers on the same type.
 
 # Data Preparation
 This part of repository provides instructions and scripts on 'how-to':<br>
@@ -83,5 +84,5 @@ As mentioned in item #2, [CamerasAnnotation.csv](https://github.com/ReconAI/Mtur
 3. Add execution time per each script
 4. Boto3 - fast image publising/privating
 5. Better comments to navigate over scripts or modular/functional structure
-
+6. Validation task updated - more options (+ rewrite 05_RankAnnotation)
 
