@@ -14,7 +14,7 @@ from tqdm import tqdm
 #constants declaration
 SAVE_FOLDER = 'AnnotationResults'
 NUM_ANNOTATION_IMAGES = 5
-NUM_VALIDATION_IMAGES = 10
+NUM_VALIDATION_IMAGES = 15
 THREAD_NUMBER = 2
 
 #Load annotation result

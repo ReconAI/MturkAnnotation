@@ -41,6 +41,40 @@ Documentation and Instructions for MTruk with helpful scripts<br><br>
 1. Sometimes tasks get frozen, this usually happens when images are failing to load, for example when there are 'bad' images from not-working cameras. In this cases you have to monitor such task or some of annotators might sent you an email about the issue. + usually 'bad' images from non-functional API would return too small images (~2 Kb), boto3 allows to check image size.
 2. It has to be taken in consideration that Tier 2 validation is not always gives correct results. For now there are few options to increase correct validation rate: 1. Hire workers with high qualification; 2. Add more options in task quiz (A. Correct annotation; B. Incorrect vehicle class; C. Not all vehicles marked; D. Incorrect bounding boxes; E. B, C and D). In addition an algoithm can be implemented to make decisions only if there are answers on the same type.
 
+## Service pricing
+
+According to [this](https://www.quora.com/What-is-the-pricing-for-data-labeling-and-annotations), bounding box annotation price varies from 1.6 to 5 US cent. This are raw numbers and thay might not include management/sevice fees and extra charges.
+In current working model (5/29/2020) annotation (bounding boxes) and validation of 15 images would cost .. . Caluclations are:
+1. Annotation task: 5 images per task, price of each task 0.01, plus Mturk service fee 0.01
+2. Validation task: 15 images per task with 5 participants (voters), price of each task 0.01, plus Mturk service fee 0.01
+From 10 images we have 3 annotation tasks and 5 validation tasks:<br>
+3*0.02 + 5*0.02 = 0.16 USD
+0.16 / 15 = 0.01066 USD <b>~1.066 US cent per image</b><br>
+
+<b>Alternative pricing model</b> (Not tested yet)<br>
+Is based on assumption that some percentage of images doesn't contain vehicles of any kind. So we can add extra task to find such images and filter them out. At the same time increase annotation price to 0.02 per annotation task.<br>
+Assume that we have 50.000 images to annotated and 30% have 'empty' samples.<br>
+
+In original annotation model we would spend:<br>
+<i>In forumlas to come: NUM_OF_IMAGES*(TASK_PRICE+MTURK_FEE)*NUM_OF_PARTICIPANTS/NUM_OF_IMAGES_PER_TASK</i><br>
+1. Annotation:<br>
+50.000*(0.01+0.01)*1/5 = $200<br>
+2. Validation:<br>
+50.000*(0.01+0.01)*5/15 = $333<br>
+<b>Total:</b> $533<br>
+
+In updated annotation with 30% empty, filtering step (20 images per task and 5 annotators) and 0.02 per annotation task:<br>
+0. Filtering:<br>
+50.000*(0.01+0.01)*5/20 = $250<br>
+1. Annotation:<br>
+50.000*(1-0.3)*(0.02+0.01)*1/5 = $210<br>
+2. Validation:<br>
+50.000*(1-0.3)*(0.01+0.01)*5/15 = $233<br>
+<b>Total:</b> $693<br>
+
+As it can be seen it costs additional $160. Please refer /results/PriceModelCalculations.xlsx to see that:<br>
+It’s cost efficient to add sorting step only when at least 50% of dataset contains empty images (images without vehicles).
+
 # Data Preparation
 This part of repository provides instructions and scripts on 'how-to':<br>
 1. Save data in AWS S3
@@ -81,8 +115,9 @@ As mentioned in item #2, [CamerasAnnotation.csv](https://github.com/ReconAI/Mtur
 
 1. FOLDER PER EACH THREAD 
 2. Visualization tool - save random N images with annotation (publish -> unpublish)
-3. Add execution time per each script
-4. Boto3 - fast image publising/privating
-5. Better comments to navigate over scripts or modular/functional structure
-6. Validation task updated - more options (+ rewrite 05_RankAnnotation)
+3. Visualization tool - check annotations by HITId(s) and find Validation HITs
+4. Add execution time per each script
+5. Boto3 - fast image publising/privating
+6. Better comments to navigate over scripts or modular/functional structure
+7. Validation task updated - more options (+ rewrite 05_RankAnnotation)
 

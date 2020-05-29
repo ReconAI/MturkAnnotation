@@ -14,8 +14,8 @@ import os
 
 #constants declaration
 SAVE_FOLDER = 'AnnotationResults'
-NUM_ANNOTATION_IMAGES = 1
-NUM_VALIDATION_IMAGES = 10
+NUM_ANNOTATION_IMAGES = 5
+NUM_VALIDATION_IMAGES = 15
 THREAD_NUMBER = 2
 REJECTION_TEXT = 'Incorrect classification of Image #{0}. Task rejected due to one of the following reasons: 1. Not all objects on the image are selected with bounding boxes (including parked and small vehicles). 2. Bounding box is not tight around the object. For more annotation details please reference Task Instruction.'
 

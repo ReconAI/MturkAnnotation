@@ -20,7 +20,7 @@ from tqdm import tqdm
 #constants declaration
 SAVE_FOLDER = 'AnnotationResults'
 IMAGE_LINK_HEADER = 'https://reconai-traffic.s3.eu-central-1.amazonaws.com/'
-THREAD_NUMBER = 4
+THREAD_NUMBER = 5
 THREAD_SIZE = 50000
 NUM_IMAGES_PER_ANNOTATION_TASK = 5
 
