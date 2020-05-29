@@ -43,6 +43,12 @@ Documentation and Instructions for MTruk with helpful scripts<br><br>
 
 ## Service pricing
 
+Mturk minimal possible annotation price would be 0.02 USD per image:<br>
+1 image per task with 0.01 cost and 0.01 service fee<br>
+The downside of this approach is how to check that annotation was performed correctly.<br>
+Minimal possbile anntation and validation price is 0.04 USD per image:<br>
+1 image per task with 0.02 USD for annotaion (one annotator) and 0.02 USD for validation<br><br>
+
 According to [this](https://www.quora.com/What-is-the-pricing-for-data-labeling-and-annotations), bounding box annotation price varies from 1.6 to 5 US cent. This are raw numbers and thay might not include management/sevice fees and extra charges.
 In current working model (5/29/2020) annotation (bounding boxes) and validation of 15 images would cost .. . Caluclations are:
 1. Annotation task: 5 images per task, price of each task 0.01, plus Mturk service fee 0.01
