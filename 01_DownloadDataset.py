@@ -9,6 +9,9 @@ import boto3
 from credentials import *
 import pandas as pd
 
+#filter images by size, other way to reduce the number of 'bad' images
+FILTER_BY_SIZE = True
+MIN_IMAGE_SIZE = 2000
 
 session = boto3.Session(
     aws_access_key_id=AWS_ACCESS_KEY_ID,
@@ -22,8 +25,13 @@ dataset_arr = []
 
 #C0150801_r0_w0_2020-03-15_19-57-12.jpg
 for s3_file in your_bucket.objects.filter(Prefix='images/C'): #all():
-    dataset_arr.append(s3_file.key)
-print('done')    
+	if FILTER_BY_SIZE:
+		if (s3_file.size>2000):
+			dataset_arr.append(s3_file.key)
+	else:
+		dataset_arr.append(s3_file.key)
+		
+print('done')
 
 
 df = pd.DataFrame(data=dataset_arr,columns=['image_url'])
