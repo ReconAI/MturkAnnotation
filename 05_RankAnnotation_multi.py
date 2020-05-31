@@ -67,7 +67,14 @@ ValidationOut_SingleColumn_Filename = '07_Thread{0}_ValidationOutput_SingleColum
 validOut_SingleCol_df.to_csv(os.path.join(SAVE_FOLDER,ValidationOut_SingleColumn_Filename),index=False)
 
 #Prepare a summary file
+#current aggregation
 validOut_Summary_df = validOut_SingleCol_df.groupby(['image_url','annotation'], as_index=False).sum()
+#possible new aggregation with count
+#validOut_Summary_df = validOut_SingleCol_df.groupby(['image_url','annotation'], as_index=False).agg(
+#        Category=pd.NamedAgg(column='Category', aggfunc='sum'),
+#        CatCount=pd.NamedAgg(column='Category', aggfunc='count'),  
+#    )
+
 validOut_Summary_df['Decision'] = validOut_Summary_df['Category'].apply(lambda x: 'Correct' if x > 0 else 'Incorrect')
 ValidationOut_Summary_Filename = '08_Thread{0}_ValidationOutput_Summary.csv'.format(THREAD_NUMBER)
 validOut_Summary_df.to_csv(os.path.join(SAVE_FOLDER,ValidationOut_Summary_Filename),index=False)
@@ -80,7 +87,7 @@ AnnotationOut_Filename = '03_Thread{0}_AnnotationOutput.csv'.format(THREAD_NUMBE
 annot_df = pd.read_csv(os.path.join(SAVE_FOLDER,AnnotationOut_Filename))
 
 ## validOut_Summary_df
-### [image_url,annotation,Category(-5:5),Decision(Correct/Incorrect)]
+### [image_url,annotation,Category(-5:5),CatCount(0:5),Decision(Correct/Incorrect)]
 validOut_Summary_df.drop(['annotation','Decision'], axis=1, inplace=True)
 
 df_list = []

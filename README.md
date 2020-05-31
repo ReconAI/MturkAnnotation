@@ -41,8 +41,9 @@ Documentation and Instructions for MTruk with helpful scripts<br><br>
 1. Sometimes tasks get frozen, this usually happens when images are failing to load, for example when there are 'bad' images from not-working cameras. In this cases you have to monitor such task or some of annotators might sent you an email about the issue. + usually 'bad' images from non-functional API would return too small images (~2 Kb), boto3 allows to check image size.
 2. It has to be taken in consideration that Tier 2 validation is not always gives correct results. For now there are few options to increase correct validation rate: 1. Hire workers with high qualification; 2. Add more options in task quiz (A. Correct annotation; B. Incorrect vehicle class; C. Not all vehicles marked; D. Incorrect bounding boxes; E. B, C and D). In addition an algoithm can be implemented to make decisions only if there are answers on the same type.
 
-## Service pricing
+## Task settings
 
+1. Price per HIT
 Mturk minimal possible annotation price would be 0.02 USD per image:<br>
 1 image per task with 0.01 cost and 0.01 service fee<br>
 The downside of this approach is how to check that annotation was performed correctly.<br>
@@ -79,7 +80,21 @@ In updated annotation with 30% empty, filtering step (20 images per task and 5 a
 <b>Total:</b> $693<br>
 
 As it can be seen it costs additional $160. Please refer /results/PriceModelCalculations.xlsx to see that:<br>
-It’s cost efficient to add sorting step only when at least 50% of dataset contains empty images (images without vehicles).
+It’s cost efficient to add sorting step only when at least 50% of dataset contains empty images (images without vehicles).<br>
+
+2. Number of HITs per task
+Following based on practical experiments.<br>
+- Annotation task of 50.000 images (5 images per task for $0.01 total) is usually annotated in 5 days => ~10.000 images per day (2000 tasks per day)<br>
+- Validation task of 30.000 images (15 images per task, 5 annotators, $0.01 total) is annotated in 6 days => ~5.000 images per day (each image is reviewed 5 times!)<br>
+Based on above, optimal task size for annotation is 10k, as it will be annotated in 1 day. Verification task size has to be similar to annotation - 10k, but it has to be taken in consideration that such task will be validated in 2 days.<br>
+
+3. Autocomplete / Verification Length
+
+This is 'Auto-approve and pay Workers in X days' - this is the amount of time you have to reject a Worker's assignment after they submit the assignment.<br>
+So Annotation autocomplete interval should be calculated as:<br>
+T_Annot_AC = T_Annot_Len + T_Verif_Len + (~)2_days<br>
+Where, T_Annot_AC - Annotation task autocomplete interval; T_Annot_Len - Annotation task completion time (10k images per day); T_Verif_Len - Verification task completion time (5k images per day); (~)2 days for unexpected cases.<br>
+Example: 8 days is optimal for 20k annotation task: 2 days for annotation, 4 days for verification, 2 days extra<br>
 
 # Data Preparation
 This part of repository provides instructions and scripts on 'how-to':<br>
