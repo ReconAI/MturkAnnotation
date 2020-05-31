@@ -1,7 +1,7 @@
 # MturkAnnotation
 Documentation and Instructions for MTruk with helpful scripts<br><br>
 
-<img src="images/VisioProcess.png" height="640" width="800" title="Process diagram"/><br>
+<img src="images/VisioProcess.png" height="230" width="800" title="Process diagram"/><br>
 
 ## Sequence of actions:
 
@@ -123,16 +123,10 @@ Test a link to the file in separate browser and ensure that file is available.<b
 
 ## 2. Be able to download samples for review
 
-Scripts '[01_discover.py](https://github.com/ReconAI/MturkAnnotation/blob/master/misc/01_discover.py)' and '[02_imageList.py](https://github.com/ReconAI/MturkAnnotation/blob/master/misc/02_imageList.py)' are using [Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library to check the contents of S3 bucket and download sample images for visual review.<br>
+Script '[discovery.py](https://github.com/ReconAI/MturkAnnotation/blob/master/validation_tools/discovery.py)' is using [Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library to check the contents of S3 bucket and download sample images for visual review.<br>
 From visual review you can prepare a document similar to [CamerasAnnotation.xlsx](https://github.com/ReconAI/MturkAnnotation/blob/master/results/CamerasAnnotation.xlsx) containig list of all cameras with the classification of their parameters (type of camera, highway/country/road view and etc.)<br>
-XSLT file can be exported in [CamerasAnnotation.csv](https://github.com/ReconAI/MturkAnnotation/blob/master/results/CamerasAnnotation.csv) for furthere handling using [Pandas](https://pandas.pydata.org/docs/).
 
-## 3. Prepare batch dataset ready for annotation
-
-As mentioned in item #2, [CamerasAnnotation.csv](https://github.com/ReconAI/MturkAnnotation/blob/master/results/CamerasAnnotation.csv) can be parsed using [Pandas](https://pandas.pydata.org/docs/) and batches of data can be picked for further processing using '[03_parseAnnotationFile.py](https://github.com/ReconAI/MturkAnnotation/blob/master/misc/03_parseAnnotationFile.py)'.<br>
-
-
-## ToDo
+# ToDo
 
 1. FOLDER PER EACH THREAD 
 2. Visualization tool - save random N images with annotation (publish -> unpublish)
