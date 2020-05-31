@@ -92,7 +92,7 @@ Based on above, optimal task size for annotation is 10k, as it will be annotated
 
 This is 'Auto-approve and pay Workers in X days' - this is the amount of time you have to reject a Worker's assignment after they submit the assignment.<br>
 So Annotation autocomplete interval should be calculated as:<br>
-T_Annot_AC = T_Annot_Len + T_Verif_Len + (~)2_days<br>
+T_Annot_AC = T_Annot_Len + T_Verif_Len + 2_days<br>
 Where, T_Annot_AC - Annotation task autocomplete interval; T_Annot_Len - Annotation task completion time (10k images per day); T_Verif_Len - Verification task completion time (5k images per day); (~)2 days for unexpected cases.<br>
 Example: 8 days is optimal for 20k annotation task: 2 days for annotation, 4 days for verification, 2 days extra<br>
 
