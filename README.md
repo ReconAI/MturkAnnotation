@@ -16,7 +16,8 @@ Documentation and Instructions for MTruk with helpful scripts<br><br>
 8. (MTurk) Create MTurk Tier 2 project with (NUMBER!) images per task
 9. (MTurk) Upload 05_Thread#_ValidationInput.csv in Mturk, launch validation task
 10. (MTurk) Download Thread validation result file (format: Batch_3998716_batch_results.csv). Rename to 06_Thread#_ValidationOutput.csv
-11. Run 05_RankAnnotation_multi.py, specify number of images per annotation (5) and validation (10) tasks, get 07_Thread#_ValidationOutput_SingleColumn.csv (Output file in one column [url, annot, category]), 08_Thread#_ValidationOutput_Summary.csv (summary on each annotation, grouped by Score), 09_Thread#_AnnotaionRankInput.csv (Ranking file for Mturk annotation task)
+11. Run 05_RankAnnotation_multi.py, specify number of images per annotation (5) and validation (10) tasks, get 07_Thread#_ValidationOutput_SingleColumn.csv (Output file in one column [url, annot, category]), 08_Thread#_ValidationOutput_Summary.csv (summary on each annotation, grouped by Score), 09_Thread#_AnnotaionRankInput.csv (Ranking file for Mturk annotation task). <br>
+05_RankAnnotation_multi_partial.py for situations when there's one big annotation task and multiple validation ones, so when one of these validation task is partially done, current validations can be downloaded and partial annotation ranking prepared. It's especially usefull when annotation task taskes too long and autocomplete date is approaching.
 12. (MTurk) Upload 09_Thread#_AnnotaionRankInput.csv to Annotation task results review (Disable [] Republish rejected assignment(s) for other Workers to complete)
 13. (MTurk) Close annotation task
 14. Run 06_UpdateDatabase.py, input is 08_Thread#_ValidationOutput_Summary.csv and Database.csv, script will update Database.csv with correct annotations, erase threadNumber, set isAnnotated and make public images private
