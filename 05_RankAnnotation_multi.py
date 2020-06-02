@@ -16,7 +16,7 @@ import os
 SAVE_FOLDER = 'AnnotationResults'
 NUM_ANNOTATION_IMAGES = 5
 NUM_VALIDATION_IMAGES = 15
-THREAD_NUMBER = 2
+THREAD_NUMBER = 4
 REJECTION_TEXT = 'Incorrect classification of Image #{0}. Task rejected due to one of the following reasons: 1. Not all objects on the image are selected with bounding boxes (including parked and small vehicles). 2. Bounding box is not tight around the object. For more annotation details please reference Task Instruction.'
 
 #Load validation result
@@ -66,16 +66,20 @@ validOut_SingleCol_df.drop(['category_lbl'], axis=1, inplace=True)
 ValidationOut_SingleColumn_Filename = '07_Thread{0}_ValidationOutput_SingleColumn.csv'.format(THREAD_NUMBER)
 validOut_SingleCol_df.to_csv(os.path.join(SAVE_FOLDER,ValidationOut_SingleColumn_Filename),index=False)
 
+validOut_SingleCol_df['CatCount'] = 1
+
 #Prepare a summary file
-#current aggregation
-validOut_Summary_df = validOut_SingleCol_df.groupby(['image_url','annotation'], as_index=False).sum()
-#possible new aggregation with count
-#validOut_Summary_df = validOut_SingleCol_df.groupby(['image_url','annotation'], as_index=False).agg(
-#        Category=pd.NamedAgg(column='Category', aggfunc='sum'),
-#        CatCount=pd.NamedAgg(column='Category', aggfunc='count'),  
-#    )
+validOut_Summary_df = validOut_SingleCol_df.groupby(['image_url','annotation'], as_index=False).agg({'Category':'sum', 'CatCount': 'count'})
 
 validOut_Summary_df['Decision'] = validOut_Summary_df['Category'].apply(lambda x: 'Correct' if x > 0 else 'Incorrect')
+
+#Filter out summary # Works only for 5 annotations per task!
+#1. Select records with CatCount = 5
+#2. Select records with CatCount = 4 and abs(Category) >= 2
+#3. Select records with CatCount = 3 and abs(Category) = 3
+filter_fininshedAnnotation = ((validOut_Summary_df['CatCount'] == 5) | ((validOut_Summary_df['CatCount'] == 4) & (np.absolute(validOut_Summary_df['Category'])>=2)) | ((validOut_Summary_df['CatCount'] == 3) & (np.absolute(validOut_Summary_df['Category'])>=3)))
+validOut_Summary_df = validOut_Summary_df.loc[filter_fininshedAnnotation]
+
 ValidationOut_Summary_Filename = '08_Thread{0}_ValidationOutput_Summary.csv'.format(THREAD_NUMBER)
 validOut_Summary_df.to_csv(os.path.join(SAVE_FOLDER,ValidationOut_Summary_Filename),index=False)
 
@@ -88,7 +92,7 @@ annot_df = pd.read_csv(os.path.join(SAVE_FOLDER,AnnotationOut_Filename))
 
 ## validOut_Summary_df
 ### [image_url,annotation,Category(-5:5),CatCount(0:5),Decision(Correct/Incorrect)]
-validOut_Summary_df.drop(['annotation','Decision'], axis=1, inplace=True)
+validOut_Summary_df.drop(['annotation','Decision','CatCount'], axis=1, inplace=True)
 
 df_list = []
 for i in range(NUM_ANNOTATION_IMAGES):
@@ -103,6 +107,7 @@ for i in range(NUM_ANNOTATION_IMAGES):
 
 ## process annot_df
 ### [Input.image_url_0, Answer.annotatedResult_0, Category_0 ] x NUM_ANNOTATION_IMAGES
+### Function to find a number of first incorrect image
 def getIncorrectImgNum(x):
     for i in range(NUM_ANNOTATION_IMAGES):
         cat_col_name = 'Category_'+str(i)
@@ -113,6 +118,22 @@ def getIncorrectImgNum(x):
 
 annot_df['IncorrectImageNum'] = annot_df.apply(lambda x: getIncorrectImgNum(x),axis=1)
 
+### Function to find a number of first missing image
+def getMissingImageNum(x):
+    for i in range(NUM_ANNOTATION_IMAGES):
+        cat_col_name = 'Category_'+str(i)
+        if pd.isnull(x[cat_col_name]):
+            incNum = i+1
+            return incNum
+    return -1
+annot_df['MissingImageNum'] = annot_df.apply(lambda x: getIncorrectImgNum(x),axis=1)
+
+#If image has IncorrectImageNum>0 - there is incorrectly annotated image - then we reject HIT
+#If image has IncorrectImageNum<0 and getMissingImageNum<0 - images are annotated correctly and missing items doesn't exist - then we accept HIT
+#If image has IncorrectImageNum<0 and getMissingImageNum>0 - images are annotated correctly, but there are missing items - we filter this out
+filter_submission = ((annot_df['IncorrectImageNum']>0) | ((annot_df['IncorrectImageNum']<0) & (annot_df['MissingImageNum']<0)))
+annot_df = annot_df.loc[filter_fininshedAnnotation]
+
 annot_df['Approve'] = annot_df.apply(lambda x: 'x' if x['IncorrectImageNum']<0 else '', axis=1)
 annot_df['Reject'] = annot_df.apply(lambda x: REJECTION_TEXT.format(x['IncorrectImageNum']) if x['IncorrectImageNum']>0 else '', axis=1)
 
@@ -120,7 +141,7 @@ for i in range(NUM_ANNOTATION_IMAGES):
     cat_col_name = 'Category_'+str(i)
     annot_df.drop([cat_col_name], axis=1, inplace=True)
 
-annot_df.drop(['IncorrectImageNum'], axis=1, inplace=True)
+annot_df.drop(['IncorrectImageNum','MissingImageNum'], axis=1, inplace=True)
 
 ## Saving result file
 AnnotationRankInput_Filename = '09_Thread{0}_AnnotaionRankInput.csv'.format(THREAD_NUMBER)
