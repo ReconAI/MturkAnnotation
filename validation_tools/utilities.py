@@ -58,14 +58,14 @@ def fixAnnotationText(p_annotation):
     p_annotation = p_annotation.replace("value", "\"value\"")
     p_annotation = p_annotation.replace("labels:", "\"labels\":")
     p_annotation = p_annotation.replace("height", "\"height\"")
+    p_annotation = p_annotation.replace("label", "\"label\"")
     p_annotation = p_annotation.replace("label:", "\"label\":")
-    p_annotation = p_annotation.replace("left", "\"left\"")
     p_annotation = p_annotation.replace("top", "\"top\"")
     p_annotation = p_annotation.replace("width", "\"width\"")
     
     return p_annotation
 
-## Read the image by the link, parse annotation
+## Read the image by the link, parse annotation (Verification format)
 ## Return - image and annotation
 def processImage(p_image_url, p_annotation):
     
@@ -77,6 +77,20 @@ def processImage(p_image_url, p_annotation):
     v_annotation_bboxes = v_raw_annotation['boundingBox']['value']
     
     return v_image, v_annotation_bboxes
+
+### Read the image by the link, parse annotation (Annotation format)
+## Return - image and annotation
+def processImageAnnotation(p_image_url, p_annotation):
+    
+    v_response = requests.get(p_image_url, stream=True).raw
+    v_image = np.asarray(bytearray(v_response.read()), dtype="uint8")
+    v_image = cv2.imdecode(v_image, cv2.IMREAD_COLOR)
+    v_raw_annotation = json.loads(p_annotation)
+    v_annotation_bboxes = v_raw_annotation
+    
+    return v_image, v_annotation_bboxes
+
+
 
 ## image list sharing method
 # p_publish = True - publish images
@@ -101,23 +115,6 @@ def s3ImageSharing(p_image_url_list, p_publish = True):
             response = object_acl.put(ACL=v_ACL)
         
     print('OK',v_ACL)
-     
-## make image public using boto3
-def makeImagesPrivate(p_image_url_list):
-    session = boto3.Session(
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY
-        )
-    
-    s3 = session.resource('s3')
-    bucket = s3.Bucket(AWS_BUCKET_NAME)
-    
-    for img_path in tqdm(p_image_url_list):
-        for s3_file in bucket.objects.filter(Prefix=img_path):
-            object_acl = s3.ObjectAcl(AWS_BUCKET_NAME,s3_file.key)
-            response = object_acl.put(ACL='private')
-    
-    return 'private:OK'
 
 # test call for Dataset.csv - like file
 # structure:

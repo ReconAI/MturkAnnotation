@@ -1,7 +1,0 @@
-Project Name: Bounding boxes verification
-Title: You will be provided with set of annotated images, please tell if annotation was made correctly and corresponds to instrcutions attached
-Description: You will be provided with set of annotated images, please tell if annotation was made correctly and corresponds to instrcutions attached
-Keywords: rate, categorize, image, verify, groud truth
-
-
-

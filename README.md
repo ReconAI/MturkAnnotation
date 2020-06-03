@@ -90,12 +90,15 @@ Following based on practical experiments.<br>
 Based on above, optimal task size for annotation is 10k, as it will be annotated in 1 day. Verification task size has to be similar to annotation - 10k, but it has to be taken in consideration that such task will be validated in 2 days.<br>
 
 3. Autocomplete / Verification Length
-
 This is 'Auto-approve and pay Workers in X days' - this is the amount of time you have to reject a Worker's assignment after they submit the assignment.<br>
 So Annotation autocomplete interval should be calculated as:<br>
 T_Annot_AC = T_Annot_Len + T_Verif_Len + 2_days<br>
 Where, T_Annot_AC - Annotation task autocomplete interval; T_Annot_Len - Annotation task completion time (10k images per day); T_Verif_Len - Verification task completion time (5k images per day); (~)2 days for unexpected cases.<br>
 Example: 8 days is optimal for 20k annotation task: 2 days for annotation, 4 days for verification, 2 days extra<br>
+
+4. Qualification Type
+Description links: [this](https://blog.mturk.com/tutorial-managing-worker-cohorts-with-qualifications-e928cd30b173), [this](https://blog.mturk.com/tutorial-understanding-requirements-and-qualifications-99a26069fba2) and [this](https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_QualificationTypeDataStructureArticle.html). On task creation there are Qualifications to select at the bottom of the screen in 'Worker requiremetns', among them the most useful are 'HIT Approval rate (%)', 'Number of HITs approved'.<br>
+Custom Qualifications test - [this](https://katherinemwood.github.io/post/qualifications/) and [this](https://forums.aws.amazon.com/thread.jspa?messageID=879829) allows to automatically estimate worker skill.
 
 # Data Preparation
 This part of repository provides instructions and scripts on 'how-to':<br>
