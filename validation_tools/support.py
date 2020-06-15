@@ -20,20 +20,18 @@ if __name__ == '__main__':
     NUM_VALIDATION_IMAGES = 15
     SAVE_FOLDER = '../AnnotationResults'
     
-    annotation_HIT_ID = '3NQUW096OAJAHWWNG9KCF6STH2I9LC'
-    Worker_ID = 'A3CBXEIC24XB0S'
+    annotation_HIT_ID = '3WRKFXQBPFINSWWP3IFFM7TS97FIY2'
+    Worker_ID = 'AWUML5SWVKPN6'
 
     DATA_SAVE_FOLDER = annotation_HIT_ID
 
     ##Read all files as datasets
     #AnnotationOutFilename = '03_Thread{0}_AnnotationOutput.csv'.format(THREAD_NUMBER)
-    AnnotationOutFilename = '03_Thread4_AnnotationOutput_part1_05302020.csv'
+    AnnotationOutFilename = '03_Thread4_AnnotationOutput_part3_06072020.csv'
     annotOut_df = pd.read_csv(os.path.join(SAVE_FOLDER,AnnotationOutFilename))
-    
     
     #ValidationOut_Filename = '06_Thread{0}_ValidationOutput.csv'.format(THREAD_NUMBER)
     ValidationOut_Filename = '06_Thread4_ValidationOutput.csv'
-    validOut_df = pd.read_csv(os.path.join(SAVE_FOLDER,ValidationOut_Filename))
     """
     AnnotationRank_Filename = '09_Thread{0}_AnnotaionRankInput.csv'.format(THREAD_NUMBER)
     #AnnotationRank_Filename = ''
@@ -83,39 +81,40 @@ if __name__ == '__main__':
     #### > if annotation contains issues - let annotator know
     #### > if annotation is correct move to Step 2
 
-    ### Step 2. Check how annotation was validated. 
-
-    
-    # Go through ValidationOutput
-    # Search by Input.image_url_str(i)
-    # retrieve HITId, WorkerId, Answer.category_str(i) (see ValidOut parsing part)
-    # for each image provide list of Validation labels, WorkerIds and HITIds
-    
-    dataframes_list = []
-    
-    #iterate columns
-    for col_id in range(NUM_VALIDATION_IMAGES):
+    if False:
+        ### Step 2. Check how annotation was validated. 
+        validOut_df = pd.read_csv(os.path.join(SAVE_FOLDER,ValidationOut_Filename))
         
-        img_col_name = 'Input.image_url_'+ str(col_id)
-        label_col_name = 'Answer.category_' + str(col_id)
+        # Go through ValidationOutput
+        # Search by Input.image_url_str(i)
+        # retrieve HITId, WorkerId, Answer.category_str(i) (see ValidOut parsing part)
+        # for each image provide list of Validation labels, WorkerIds and HITIds
         
-        img_filter = validOut_df[img_col_name].isin(images_list)
-        sub_df = validOut_df.loc[img_filter,['HITId','WorkerId',img_col_name,label_col_name]]
-        sub_df.rename(columns={img_col_name:'image_url',label_col_name:'label'},inplace=True)
-        dataframes_list.append(sub_df)
-    
-    image_ranks = pd.concat(dataframes_list)
-    
-    print(image_ranks.head())
-    
-    image_ranks.sort_values(by=['image_url','WorkerId'],inplace=True)
-    
-    filename = 'HIT_' + annotation_HIT_ID + '_RankDetails.csv'
-    filename = os.path.join(annotation_HIT_ID,filename)
-    image_ranks.to_csv(filename,index=False)
-    
-    print('Done')
-    
+        dataframes_list = []
+        
+        #iterate columns
+        for col_id in range(NUM_VALIDATION_IMAGES):
+            
+            img_col_name = 'Input.image_url_'+ str(col_id)
+            label_col_name = 'Answer.category_' + str(col_id)
+            
+            img_filter = validOut_df[img_col_name].isin(images_list)
+            sub_df = validOut_df.loc[img_filter,['HITId','WorkerId',img_col_name,label_col_name]]
+            sub_df.rename(columns={img_col_name:'image_url',label_col_name:'label'},inplace=True)
+            dataframes_list.append(sub_df)
+        
+        image_ranks = pd.concat(dataframes_list)
+        
+        print(image_ranks.head())
+        
+        image_ranks.sort_values(by=['image_url','WorkerId'],inplace=True)
+        
+        filename = 'HIT_' + annotation_HIT_ID + '_RankDetails.csv'
+        filename = os.path.join(annotation_HIT_ID,filename)
+        image_ranks.to_csv(filename,index=False)
+        
+        print('Done')
+        
     #Step 2 Results: 
     ### Evaluate how workers annotated images, double check results
     

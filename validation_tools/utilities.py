@@ -53,17 +53,25 @@ def drawAnnotation(p_image, p_annotation):
 # Input - raw MturkAnnotation text
 # Output - json as text which wouldn't crash on json.loads()
 def fixAnnotationText(p_annotation):
+    p_annotation = p_annotation.replace("labels: ['Car', 'Van', 'Truck', 'Trailer', 'Bus', 'Motorbike', 'Bicycle', 'Heavy Equipment', 'Car Trailer', 'Tractor', 'Pedestrian'],", "")
     p_annotation = p_annotation.replace("\'", "\"")
     p_annotation = p_annotation.replace("},}", "}}")
     p_annotation = p_annotation.replace("value", "\"value\"")
     p_annotation = p_annotation.replace("labels:", "\"labels\":")
-    p_annotation = p_annotation.replace("height", "\"height\"")
     p_annotation = p_annotation.replace("label", "\"label\"")
-    p_annotation = p_annotation.replace("label:", "\"label\":")
+    p_annotation = p_annotation.replace("label:", "\"label\":")    
+    p_annotation = p_annotation.replace("height", "\"height\"")
     p_annotation = p_annotation.replace("top", "\"top\"")
     p_annotation = p_annotation.replace("width", "\"width\"")
+    p_annotation = p_annotation.replace("left", "\"left\"")
     
     return p_annotation
+
+def processAnnotation(p_ann):
+    v_ann = fixAnnotationText(p_ann)
+    v_raw_annotation = json.loads(v_ann)
+    return v_raw_annotation['boundingBox']['value']
+
 
 ## Read the image by the link, parse annotation (Verification format)
 ## Return - image and annotation
@@ -72,11 +80,7 @@ def processImage(p_image_url, p_annotation):
     v_response = requests.get(p_image_url, stream=True).raw
     v_image = np.asarray(bytearray(v_response.read()), dtype="uint8")
     v_image = cv2.imdecode(v_image, cv2.IMREAD_COLOR)
-    p_annotation = fixAnnotationText(p_annotation)
-    v_raw_annotation = json.loads(p_annotation)
-    v_annotation_bboxes = v_raw_annotation['boundingBox']['value']
-    
-    return v_image, v_annotation_bboxes
+    return v_image, processAnnotation(p_annotation)
 
 ### Read the image by the link, parse annotation (Annotation format)
 ## Return - image and annotation
