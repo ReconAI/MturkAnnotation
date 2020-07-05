@@ -16,7 +16,7 @@ import os
 #constants declaration
 IMAGE_LINK_HEADER = 'https://reconai-traffic.s3.eu-central-1.amazonaws.com/'
 SAVE_FOLDER = 'AnnotationResults'
-THREAD_NUMBER = 7
+THREAD_NUMBER = 9
 
 #Load Dataset.csv
 #image_url,annotation,threadNum,isAnnotated
